@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from .my_settings import MY_DATABASES, MY_SECRET_KEY
+from my_settings import MY_DATABASES, MY_SECRET_KEY
 import pymysql
 
 pymysql.install_as_MySQLdb()
