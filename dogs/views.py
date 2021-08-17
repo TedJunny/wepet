@@ -1,9 +1,10 @@
+import json
+
 from django.http import JsonResponse
 from django.views import View
+
 from dogs.models import Dog
 from owners.models import Owner
-
-import json
 
 
 class DogListView(View):
@@ -21,3 +22,11 @@ class DogListView(View):
             return JsonResponse({"MESSAGE": "VALUE ERROR"}, status=400)
         except KeyError:
             return JsonResponse({"MESSAGE": "KEY ERROR"}, status=400)
+
+    def get(self, request):
+        result = []
+        dogs = Dog.objects.all()
+        for dog in dogs:
+            result.append({"name": dog.name, "age": dog.age, "owner": dog.owner.name})
+
+        return JsonResponse({"results": result}, status=200)
