@@ -9,19 +9,18 @@ from owners.models import Owner
 
 class DogListView(View):
     def post(self, request):
-        try:
-            data = json.loads(request.body)
-            name = data["name"]
-            age = data["age"]
-            owner = Owner.objects.get(name=data["owner"])
+        data = json.loads(request.body)
 
-            dog = Dog(name=name, age=age, owner=owner)
-            dog.save()
-            return JsonResponse({"MESSAGE": "CREATED"}, status=201)
-        except ValueError:
-            return JsonResponse({"MESSAGE": "VALUE ERROR"}, status=400)
-        except KeyError:
-            return JsonResponse({"MESSAGE": "KEY ERROR"}, status=400)
+        if not Owner.objects.filter(id=data["owner_id"]).exists():
+            return JsonResponse({"message": "Does Not Exist"}, status=400)
+
+        Dog.objects.create(
+            name=data["name"],
+            age=data["age"],
+            owner_id=data["owner_id"],
+        )
+
+        return JsonResponse({"MESSAGE": "CREATED"}, status=201)
 
     def get(self, request):
         result = []
